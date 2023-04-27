@@ -23,19 +23,17 @@ Fraction::Fraction(const Fraction &other) : numerator(other.getNumerator()), den
 {
     fractionReduction();
 }
+Fraction::Fraction(Fraction &&other) noexcept
+{
+    numerator = other.numerator;
+    denominator = other.denominator;
+    other.numerator = 0;
+    other.denominator = 1;
+}
+// destructor:
+Fraction::~Fraction() {}
 
 // my added functions:
-
-// reducing the Fraction after some arithmetic action:
-void Fraction::fractionReduction()
-{
-    // getting the gcd:
-    int greatest_common_divider = gcdFind(numerator, denominator);
-
-    // setting the new values:
-    numerator = numerator / greatest_common_divider;
-    denominator = denominator / greatest_common_divider;
-}
 
 // finding the gcd of the numerator and the denominator:
 int gcdFind(int num1, int num2)
@@ -71,6 +69,17 @@ int gcdFind(int num1, int num2)
     }
     return res;
 }
+// reducing the Fraction after some arithmetic action:
+void Fraction::fractionReduction()
+{
+    // getting the gcd:
+    int greatest_common_divider = gcdFind(numerator, denominator);
+
+    // setting the new values:
+    numerator = numerator / greatest_common_divider;
+    denominator = denominator / greatest_common_divider;
+}
+
 
 // functions to impliment:
 int Fraction::getNumerator() const
@@ -91,7 +100,7 @@ Fraction &Fraction::operator++()
 } // prefix
 
 // first return the original values and then update them:
-Fraction &Fraction::operator++(int)
+Fraction Fraction::operator++(int)
 {
     Fraction temp(*this);
     ++(*this);
@@ -105,12 +114,30 @@ Fraction &Fraction::operator--()
     return *this;
 } // prefix
 
-Fraction &Fraction::operator--(int)
+Fraction Fraction::operator--(int)
 {
     Fraction temp(*this);
     --(*this);
     return temp;
 } // postfix
+
+Fraction& Fraction::operator=(const Fraction &other)
+{
+    numerator = other.getNumerator();
+    denominator = other.getDenominator();
+    return *this;
+}
+Fraction& Fraction::operator=(Fraction &&other) noexcept
+{
+    if (this != &other)
+    {
+        numerator = other.numerator;
+        denominator = other.denominator;
+        other.numerator = 0;
+        other.denominator = 1;
+    }
+    return *this;
+}
 
 // friend functions:
 Fraction operator+(const Fraction &first, const Fraction &second)
@@ -158,7 +185,8 @@ bool operator<(const Fraction &first, const Fraction &second)
 { // given a/b ,c/d , checking if a*d < c*b:
     return (first.getNumerator() * second.getDenominator()) < (second.getNumerator() * first.getDenominator());
 }
-bool operator>=(const Fraction &first, const Fraction &second) { return (first > second)||(first == second); }
-bool operator<=(const Fraction &first, const Fraction &second) { (first < second)||(first == second); }
+bool operator>=(const Fraction &first, const Fraction &second) { return (first > second) || (first == second); }
+bool operator<=(const Fraction &first, const Fraction &second) { return ((first < second) || (first == second)); }
 
 ostream &operator<<(std::ostream &output, const Fraction &fracNum) { return output; }
+ostream &operator>>(std::ostream &output, const Fraction &fracNum) { return output; }
