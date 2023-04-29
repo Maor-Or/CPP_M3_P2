@@ -6,7 +6,7 @@
 #include "Fraction.hpp"
 
 using namespace std;
-using namespace ariel;
+namespace ariel{
 
 // constructors:
 Fraction::Fraction() : numerator(0), denominator(1) {}
@@ -352,4 +352,5 @@ ostream &operator<<(std::ostream &output, const Fraction &fraction)
 
     // Return the output stream object
     return output;
+}
 }
