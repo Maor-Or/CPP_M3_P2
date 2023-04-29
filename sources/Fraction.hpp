@@ -9,7 +9,7 @@ namespace ariel
 
     class Fraction
     {
-        // private:
+    // private:
         int numerator, denominator;
 
         // my added private functions:
@@ -41,6 +41,7 @@ namespace ariel
         Fraction operator--(int);
         Fraction &operator--();
 
+        Fraction &operator=(const Fraction &other);
         Fraction &operator=(Fraction &&other) noexcept;
 
         // friend functions:
@@ -49,7 +50,6 @@ namespace ariel
         friend Fraction operator*(const Fraction &first, const Fraction &second);
         friend Fraction operator/(const Fraction &first, const Fraction &second);
         friend bool operator==(const Fraction &first, const Fraction &second);
-        Fraction &operator=(const Fraction &other);
         friend bool operator!=(const Fraction &first, const Fraction &second);
         friend bool operator>(const Fraction &first, const Fraction &second);
         friend bool operator<(const Fraction &first, const Fraction &second);

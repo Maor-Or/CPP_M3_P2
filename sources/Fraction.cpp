@@ -6,6 +6,7 @@
 #include "Fraction.hpp"
 
 using namespace std;
+
 namespace ariel{
 
 // constructors:
@@ -71,7 +72,7 @@ void Fraction::setValues(int num, int deno)
     fractionReduction();
 }
 
-// reducing the Fraction after some arithmetic action:
+// reducing the Fraction after some arithmetic action or a general change to it's values:
 void Fraction::fractionReduction()
 {
     // getting the gcd, using a built-in gcd function:
@@ -288,9 +289,10 @@ bool operator==(const Fraction &first, const Fraction &second)
 { // fractions are already reduced, given a/b , c/d, checking if a == c and b == d:
 
     // in the tests - it looks like sometimes the fraction turns out too accurate,
-    // and so needed to make it less accurate:
+    // and so needed to be made less accurate:
     Fraction newFirst, newSecond;
     int flag1 = 0, flag2 = 0;
+
     if (first.getDenominator() > 1000)
     { // making a new fraction less accurate:
         flag1 = 1;
@@ -325,13 +327,13 @@ bool operator<=(const Fraction &first, const Fraction &second) { return ((first 
 
 istream &operator>>(std::istream &input, Fraction &fraction)
 {
-    int newNumerator, newDenominator = 0; // if no value will be inputed, or 0 is inputed, then newDeno stays 0, and exception is thrown
+    int newNumerator, newDenominator = 0; // if no value will be inputed, or 0 is inputed, then newDeno stays 0, and an exception is thrown
 
     // get the values from the input stream:
     input >> newNumerator;
     input >> newDenominator;
 
-    // Checking if the denominator is missing:
+    // Checking if the denominator is missing or is 0:
     if (newDenominator == 0)
     {
         throw std::runtime_error("Denominator is missing/zero");
