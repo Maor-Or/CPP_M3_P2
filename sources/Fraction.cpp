@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <algorithm>
 #include "Fraction.hpp"
 
 using namespace std;
@@ -7,9 +8,19 @@ using namespace ariel;
 
 // constructors:
 Fraction::Fraction() : numerator(0), denominator(1) {}
-Fraction::Fraction(int num, int denom) : numerator(num), denominator(denom)
+Fraction::Fraction(int num, int denom)
 {
-    // keeping the denominator positive, switching the numerator from negative to positive and vice versa
+    //checking for 0 in the denominator:
+    if (denom == 0)
+    {
+        throw std::invalid_argument("cant divide by 0!");
+    }
+    
+    //setting the values:
+    numerator = num; denominator = denom;
+
+    // keeping the denominator positive, switching the numerator 
+    // from negative to positive and vice versa
     if (denominator < 0)
     {
         numerator = numerator * -1;
@@ -30,56 +41,52 @@ Fraction::Fraction(Fraction &&other) noexcept
     other.numerator = 0;
     other.denominator = 1;
 }
+
 // destructor:
 Fraction::~Fraction() {}
 
 // my added functions:
 
-// finding the gcd of the numerator and the denominator:
-int gcdFind(int num1, int num2)
+// setters:
+void Fraction::setNumerator(int num)
 {
-    int res = 1;
-
-    // making both numbers positive:
-    if (num1 < 0)
-    {
-        num1 = num1 * -1;
-    }
-    if (num2 < 0)
-    {
-        num2 = num2 * -1;
-    }
-
-    // picking the smaller number between the two
-    if (num1 < num2)
-    { // if num1 is smaller than num2 then
-      // we first switch before checking all the numbers between 2 and the smaller number
-        int temp = num2;
-        num2 = num1;
-        num1 = temp;
-    }
-
-    // finding the gcd (in the range between 2 to the smaller number, if none found then res is 1)
-    for (int i = 2; i <= num2; ++i)
-    {
-        if (num1 % i == 0 && num2 % i == 0)
-        {
-            res = i;
-        }
-    }
-    return res;
+    numerator = num;
+    fractionReduction();
 }
+void Fraction::setDenominator(int deno)
+{
+    if (deno == 0)
+    {
+        throw std::invalid_argument("cant divide by 0!");
+    }
+    denominator = deno;
+    fractionReduction();
+}
+// i made this function incase both values are added one after the other.
+// in that case, we only wish to reduce fraction once
+void Fraction::setValues(int num, int deno)
+{
+    if (deno == 0)
+    {
+        throw std::invalid_argument("cant divide by 0!");
+    }
+    numerator = num;
+    denominator = deno;
+    fractionReduction();
+}
+
 // reducing the Fraction after some arithmetic action:
 void Fraction::fractionReduction()
 {
-    // getting the gcd:
-    int greatest_common_divider = gcdFind(numerator, denominator);
+    // getting the gcd, using a built-in gcd function:
+    int greatest_common_divider = __gcd(numerator, denominator);
+    if (greatest_common_divider < 0)
+        greatest_common_divider *= -1;
 
     // setting the new values:
     numerator = numerator / greatest_common_divider;
     denominator = denominator / greatest_common_divider;
 }
-
 
 // functions to impliment:
 int Fraction::getNumerator() const
@@ -114,6 +121,7 @@ Fraction &Fraction::operator--()
     return *this;
 } // prefix
 
+// first return the original values and then update them:
 Fraction Fraction::operator--(int)
 {
     Fraction temp(*this);
@@ -121,13 +129,13 @@ Fraction Fraction::operator--(int)
     return temp;
 } // postfix
 
-Fraction& Fraction::operator=(const Fraction &other)
+Fraction &Fraction::operator=(const Fraction &other)
 {
     numerator = other.getNumerator();
     denominator = other.getDenominator();
     return *this;
 }
-Fraction& Fraction::operator=(Fraction &&other) noexcept
+Fraction &Fraction::operator=(Fraction &&other) noexcept
 {
     if (this != &other)
     {
@@ -188,5 +196,27 @@ bool operator<(const Fraction &first, const Fraction &second)
 bool operator>=(const Fraction &first, const Fraction &second) { return (first > second) || (first == second); }
 bool operator<=(const Fraction &first, const Fraction &second) { return ((first < second) || (first == second)); }
 
-ostream &operator<<(std::ostream &output, const Fraction &fracNum) { return output; }
-ostream &operator>>(std::ostream &output, const Fraction &fracNum) { return output; }
+istream &operator>>(std::istream &input, Fraction &fraction)
+{
+    int newNumerator, newDenominator;
+
+    // get the values from the input stream:
+    input >> newNumerator;
+    input >> newDenominator;
+
+    // Set the values to the Fraction object
+    fraction.setValues(newNumerator, newDenominator);
+
+    // Return the input stream object
+    return input;
+}
+ostream &operator<<(std::ostream &output, const Fraction &fraction)
+{
+    // get the values from the Fraction object to the output stream:
+    output << fraction.getNumerator();
+    output << "/";
+    output << fraction.getDenominator();
+
+    // Return the output stream object
+    return output;
+}

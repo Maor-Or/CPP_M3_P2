@@ -1,8 +1,5 @@
 #pragma once
 
-// TODO: delete if not needed:
-// #include <string>
-
 #include <iostream>
 
 using namespace std;
@@ -12,7 +9,7 @@ class Fraction
     // private:
     int numerator, denominator;
 
-    // my added functions:
+    // my added private functions:
     void fractionReduction();
 
 public:
@@ -27,12 +24,17 @@ public:
     // destructor:
     ~Fraction();
 
+    // my added public functions:
+    void setNumerator(int num);
+    void setDenominator(int deno);
+    void setValues(int num, int deno);
+
     // functions to implement:
     int getNumerator() const;
     int getDenominator() const;
 
     Fraction operator++(int); // postfix
-    Fraction &operator++();    // prefix
+    Fraction &operator++();   // prefix
     Fraction operator--(int);
     Fraction &operator--();
 
@@ -52,8 +54,8 @@ public:
     friend bool operator<=(const Fraction &first, const Fraction &second);
 
     // IO:
-    friend ostream& operator>> (std::istream& output, const Fraction& fracNum);
-    friend ostream& operator<<(std::ostream &output, const Fraction &fracNum);
+    friend istream &operator>>(std::istream &input, Fraction &fraction);
+    friend ostream &operator<<(std::ostream &output, const Fraction &fraction);
 };
 namespace ariel
 {
