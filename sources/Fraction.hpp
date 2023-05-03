@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 namespace ariel
 {
 
@@ -19,8 +17,7 @@ namespace ariel
         // constructors:
         Fraction();
         Fraction(int numerator, int denominator);
-        Fraction(double num);
-        Fraction(int num);
+        Fraction(float num);
         Fraction(const Fraction &other);
         Fraction(Fraction &&other) noexcept;
 
@@ -57,8 +54,8 @@ namespace ariel
         friend bool operator<=(const Fraction &first, const Fraction &second);
 
         // IO:
-        friend istream &operator>>(std::istream &input, Fraction &fraction);
-        friend ostream &operator<<(std::ostream &output, const Fraction &fraction);
+        friend std::istream &operator>>(std::istream &input, Fraction &fraction);
+        friend std::ostream &operator<<(std::ostream &output, const Fraction &fraction);
     };
 
 } // namespace ariel
